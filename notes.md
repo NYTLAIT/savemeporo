@@ -131,6 +131,18 @@ nvm, im a liar, just needed the function to be above the discord.app_commands.co
         ]
 **END**
 
+**ABOUT THE COMMAND PREFIX BEING NEEDED**
+bot = Bot(command_prefix='/', intents=intents)
+command_prefix still needed apparently, something about:
+^ '__init__() missing 1 required positional argument: 'command_prefix''
+**END**
+
+**CLASS SYNTAX**
+class Child(Parent):
+child inherits everything but can add or override what i want
+**END**
+
+
 
 
 

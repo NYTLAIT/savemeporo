@@ -12,3 +12,7 @@ but basically had to put the function above the discord.app_commands.command not
 
 **.gitignore** do not understand why even if i wrote notes.md and questions.md into the .gitignore file. it doesnt seem to be getting ignored?
 
+**docstrings**
+how do i use docstrings properly?
+(log_command.py)
+
