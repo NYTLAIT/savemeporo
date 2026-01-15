@@ -8,7 +8,7 @@ class AdjustCommandsCog(commands.Cog):
     
     # SIMPLE CHECK IF WORKING
     @discord.app_commands.command(name='test_adjust', description='testing if adjust command work')
-    async def test001(self, interaction:discord.Interaction):
+    async def test_adjust(self, interaction:discord.Interaction):
         await interaction.response.send_message(f'adjust_cog_bot_test a success!')
 
     

@@ -91,12 +91,45 @@ async def addpoints(ctx, amount: int):
 discord.apps_commands.command in cog
 bot.command in main
 
+**REALLY COOL WAY OF FILTERING**
 really cool way of filtering:
 for action_option in action_options if current.lower() in action_option.lower()
 loop through items in action_options -> for action_option in action_options
 return the option if the current being typed is in(part of) an action_option item -> if current.lower() in action_option.lower()
 
 (name='action_option', value='action_option') -> creates options for dropdown
+**END**
+
+**FLOW OF COMMANDS WITH AUTOCOMPLETE**
+discord.app_commands.command -> defines /commmand
+discord.app_commands.command -> adds descriptions to the options
+discord.app_commands.command -> dynamic suggestion generator
+some reason discord.py likes metadata and dynamic stuff seperate or some???
+im not to sure about it but wow, ig code has personality alright
+
+I still do not understand but here:
+    async def action_autocomplete(self, interaction:discord.Interaction, current: str
+    ) -> list[discord.app_commands.Choice[str]]:
+        action_options = ['in', 'out']
+        return [
+            discord.app_commands.Choice(name=action_option, value=action_option)
+            for action_option in action_options if current.lower() in action_option.lower()
+        ]
+the -> is something to do with type hint, which says some like the function being defined is going to return a list of app_commands.Choice, i dont know why it is in this syntax and most importantly why im getting an error when I dont include it, at least from my understand of this error message:
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.log_commands' raised an error: TypeError: unknown parameter given: action
+
+nvm, im a liar, just needed the function to be above the discord.app_commands.command which i still dont get why
+
+    # for the autocomplete below
+    # (must be explicity written and put into in the autocomplete for autocomplete below to work: 
+    # is why amount and note are not autocompletes)
+    async def action_autocomplete(self, interaction:discord.Interaction, current: str):
+        action_options = ['in', 'out']
+        return [
+            discord.app_commands.Choice(name=action_option, value=action_option)
+            for action_option in action_options if current.lower() in action_option.lower()
+        ]
+**END**
 
 
 
