@@ -7,11 +7,11 @@ class SlashyCommandsCog(commands.Cog):
         self.bot = bot
     
     # SIMPLE CHECK IF WORKING
-    @discord.app_commands.command(name='test001', description='testing if slash commands work')
+    @discord.app_commands.command(name='test_slashy', description='testing if slash commands work')
     async def test001(self, interaction:discord.Interaction):
-        await interaction.response.send_message(f'cog_bot_test a success!')
+        await interaction.response.send_message(f'slashy_cog_bot_test a success!')
 
-    print('slashy_commands.py: cog is being seen')
+    print('slashy_commands.py: slashy_cog is being seen')
     
 async def setup(bot):
     await bot.add_cog(SlashyCommandsCog(bot))

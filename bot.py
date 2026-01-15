@@ -29,7 +29,8 @@ class Bot(commands.Bot):
 
         print(f'{self.user.name} IS ONLINE')
 
-bot = Bot(command_prefix='/', intents=intents)
+# bot = Bot(command_prefix='/', intents=intents)
+bot = Bot(intents=intents)
 
 # SIMPLE CHECK JUST TO SEE IF BOT IS IN CHAT
 @bot.event
@@ -38,7 +39,7 @@ async def on_message(message):
         return
     if 'summon bots' in message.content.lower():
         await message.channel.send(f'{message.author.mention} has summoned me!')
-    await bot.process_commands(message)
+    # await bot.process_commands(message)
 
 bot.run(discord_token, log_handler=handler, log_level=logging.DEBUG)
   

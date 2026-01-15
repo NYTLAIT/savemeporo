@@ -41,3 +41,63 @@ unsure of what __init__ does still
 
 __init__.py in cogs is simply to treat that folder as a package, nothing really has to go in there
 
+
+---------------------------------------------JSON STUFF I DONT GET JUST YET
+import json
+import asyncio
+
+class JSONDataManager:
+    def __init__(self, file_path='data.json'):
+        self.file_path = file_path
+        self.lock = asyncio.Lock()
+        # Load data at startup
+        try:
+            with open(self.file_path, 'r') as f:
+                self.data = json.load(f)
+        except FileNotFoundError:
+            self.data = {}
+
+    async def get_user(self, user_id):
+        return self.data.get(str(user_id), {})
+
+    async def set_user(self, user_id, value: dict):
+        async with self.lock:
+            self.data[str(user_id)] = value
+            # Save immediately
+            with open(self.file_path, 'w') as f:
+                json.dump(self.data, f, indent=4)
+
+    async def update_user_points(self, user_id, points):
+        async with self.lock:
+            user_data = self.data.get(str(user_id), {'points': 0})
+            user_data['points'] += points
+            self.data[str(user_id)] = user_data
+            with open(self.file_path, 'w') as f:
+                json.dump(self.data, f, indent=4)
+            return user_data['points']
+
+from discord.ext import commands
+from data_manager import JSONDataManager
+
+bot = commands.Bot(command_prefix='/', intents=intents)
+data_manager = JSONDataManager()
+
+@bot.command()
+async def addpoints(ctx, amount: int):
+    new_points = await data_manager.update_user_points(ctx.author.id, amount)
+    await ctx.send(f"{ctx.author.mention} now has {new_points} points!")
+ ---------------------------------------------------
+
+discord.apps_commands.command in cog
+bot.command in main
+
+really cool way of filtering:
+for action_option in action_options if current.lower() in action_option.lower()
+loop through items in action_options -> for action_option in action_options
+return the option if the current being typed is in(part of) an action_option item -> if current.lower() in action_option.lower()
+
+(name='action_option', value='action_option') -> creates options for dropdown
+
+
+
+
