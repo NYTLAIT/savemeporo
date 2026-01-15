@@ -45,7 +45,7 @@ class LogCommandsCog(commands.Cog):
         creates the dynamic stuffs, that brings that UI for the autocomplete, float, and str
         """
         await interaction.response.send_message(
-            f'test log_command: action-{action}, amount-{amount}, note-{note}')
+            f'test log_command-> action:{action}, amount:{amount}, note:{note}')
         
     # PRINT IF COG IS BEING SEEN
     print('log_commands.py: log_cog is being seen')
