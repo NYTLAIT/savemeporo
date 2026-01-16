@@ -1,5 +1,16 @@
 from logics.general_logic import *
 
+def view_option_gateway(user, scope):
+    if scope == 'year':
+        return year_log(user)
+    elif scope == 'month':
+        return month_log(user)
+    elif scope == 'day':
+        user_id = None
+        data = None
+        timestamp = None
+        return day_log(user, user_id, data, timestamp)
+
 def year_log(user):
     user_id, data, timestamp = check_account(user)
     ledger_module = data.get('ledger_module')
@@ -12,7 +23,7 @@ def year_log(user):
     total_spent = 0
 
     for log in year_log_list:
-        log_date_datetime = datetime.fromisoformat(log['date']).date()
+        log_date_datetime = datetime.fromisoformat(log['timestamp']).date()
 
         if log_date_datetime.month not in monthly_data:
             monthly_data[log_date_datetime.month] = {
@@ -36,7 +47,8 @@ def year_log(user):
         "monthly_data": monthly_data,
         "total_added": total_added,
         "total_spent": total_spent,
-        "net_change": total_added - total_spent
+        "net_change": total_added - total_spent,
+        "balance": total_balance(timestamp, ledger_module)
     }
         
     year_statement['monthly_data'] = sort_log_data(year_statement['monthly_data'], numeric=True)
@@ -55,7 +67,7 @@ def month_log(user):
     total_spent = 0
 
     for log in month_log_list:
-        log_date_datetime = datetime.fromisoformat(log['date']).date()
+        log_date_datetime = datetime.fromisoformat(log['timestamp']).date()
         log_date_weeknum = log_date_datetime.isocalendar()[1]
 
         if log_date_weeknum not in weekly_data:
@@ -87,7 +99,8 @@ def month_log(user):
         "weekly_data": weekly_data,
         "total_added": total_added,
         "total_spent": total_spent,
-        "net_change": total_added - total_spent
+        "net_change": total_added - total_spent,
+        "balance": total_balance(timestamp, ledger_module)
     }
 
     month_statement['weekly_data'] = sort_log_data(month_statement['weekly_data'], numeric=True)
@@ -107,7 +120,7 @@ def day_log(user, user_id, data, timestamp):
     total_spent = 0
 
     for log in day_log_list:
-        log_date_time = datetime.fromisoformat(log['time']).time()
+        log_date_time = datetime.fromisoformat(log['timestamp']).time()
 
         if log_date_time not in timely_data:
             timely_data[log_date_time] = {
@@ -132,10 +145,10 @@ def day_log(user, user_id, data, timestamp):
         "timely_data": timely_data,
         "total_added": total_added,
         "total_spent": total_spent,
-        "net_change": total_added - total_spent
+        "net_change": total_added - total_spent,
+        "balance": total_balance(timestamp, ledger_module)
     }
 
     day_statement['timely_data'] = sort_log_data(day_statement['timely_data'])
 
     return day_statement
-    

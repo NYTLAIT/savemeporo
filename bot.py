@@ -28,7 +28,7 @@ code went through
 """
 class Bot(commands.Bot):
     async def setup_hook(self):
-        await self.load_extension('cogs.slashy_commands')
+        await self.load_extension('cogs.zzz_slashy_commands')
         await self.load_extension('cogs.log_commands')
         await self.load_extension('cogs.adjust_commands')
         await self.load_extension('cogs.view_commands')

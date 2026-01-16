@@ -28,6 +28,7 @@ def enter_log(action: str, amount: float, note: str, user, data_file='data.json'
     new_ledger_entry = {
         "ledger_id(PK)": len(ledger_module) + 1, 
         "user_id(FK)": user_id,
+        "timestamp": timestamp.isoformat(),
         "date": timestamp.date().isoformat(),
         "time": timestamp.time().isoformat(),
         "amount": amount,
@@ -39,6 +40,11 @@ def enter_log(action: str, amount: float, note: str, user, data_file='data.json'
     ledger_module.append(new_ledger_entry)
 
     write_data(data_file, data)
+    day_statement = day_log(user, user_id, data, timestamp)
 
-    return day_log(user, user_id, data, timestamp)
+    log_receipt = {}
+    log_receipt.update(day_statement)
+    log_receipt.update(new_ledger_entry)
+    
+    return log_receipt
 # ^^^END
