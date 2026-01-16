@@ -32,6 +32,7 @@ def year_log(user):
         total_spent += month_totals['spent']
 
     year_statement = {
+        "year": timestamp.date().year,
         "monthly_data": monthly_data,
         "total_added": total_added,
         "total_spent": total_spent,
@@ -82,6 +83,7 @@ def month_log(user):
         total_spent += week_totals['spent']
 
     month_statement = {
+        "month": timestamp.date().month,
         "weekly_data": weekly_data,
         "total_added": total_added,
         "total_spent": total_spent,
@@ -92,8 +94,9 @@ def month_log(user):
             
     return month_statement
 
-def day_log(user):
-    user_id, data, timestamp = check_account(user)
+def day_log(user, user_id, data, timestamp):
+    if user_id == None:
+        user_id, data, timestamp = check_account(user)
     ledger_module = data.get('ledger_module')
 
     filter_type = 'day'
@@ -125,6 +128,7 @@ def day_log(user):
         total_spent += time_totals['spent']
 
     day_statement = {
+        "day": timestamp.date().isoformat(),
         "timely_data": timely_data,
         "total_added": total_added,
         "total_spent": total_spent,

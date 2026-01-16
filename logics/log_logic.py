@@ -1,5 +1,6 @@
 from datetime import datetime
 from logics.general_logic import *
+from logics.view_logic import day_log
 
 # ENTER NEW LOG
 def enter_log(action: str, amount: float, note: str, user, data_file='data.json'):
@@ -19,7 +20,7 @@ def enter_log(action: str, amount: float, note: str, user, data_file='data.json'
     :param note: recommended to write item spent for action out,
     optional for action in
     :type note: str
-    :return:
+    :return day_statement: dict of day_statement
     """
     user_id, data, timestamp = check_account(user)
     ledger_module = data.get('ledger_module')
@@ -31,11 +32,13 @@ def enter_log(action: str, amount: float, note: str, user, data_file='data.json'
         "time": timestamp.time().isoformat(),
         "amount": amount,
         "action": action,
-        "method": "null",
-        "adjust_id": "null",
+        "method": None,
+        "adjust_id": None,
         "note": note
     }
     ledger_module.append(new_ledger_entry)
 
     write_data(data_file, data)
+
+    return day_log(user, user_id, data, timestamp)
 # ^^^END
