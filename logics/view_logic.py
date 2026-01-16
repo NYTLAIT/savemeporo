@@ -96,6 +96,7 @@ def month_log(user):
 
     month_statement = {
         "month": timestamp.date().month,
+        "month_name": log_date_datetime.strftime("%B"),
         "weekly_data": weekly_data,
         "total_added": total_added,
         "total_spent": total_spent,
