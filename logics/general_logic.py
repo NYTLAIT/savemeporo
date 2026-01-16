@@ -50,10 +50,10 @@ def check_account(user):
         "user_id(FK)": new_account_entry['user_id(PK)'],
         "opening_balance": 0,
         "closing_balance": 0,
-            "total_spent": 0,
-            "total_saved": 0,
-            "year": timestamp.year,
-            "month": timestamp.month
+        "total_spent": 0,
+        "total_saved": 0,
+        "year": timestamp.year,
+        "month": timestamp.month
         }
     
     user_module.append(new_account_entry)
