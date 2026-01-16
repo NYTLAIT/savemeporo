@@ -46,13 +46,44 @@ class LogCommandsCog(commands.Cog):
 
         # EMBED FILL
         if action == 'in':
-            embed = discord.Embed(
-                title="ADD",
-                description=f"Added: {receipt['amount']} \n"
-                            f"Note: {receipt['note']} \n"
-                            f"Balance: ${receipt['balance']}",
-                color=discord.Color.dark_teal()
+            title = "ADD"
+        elif action == 'out':
+            title = "OUT"
+
+        embed = discord.Embed(
+            title=title,
+            description=f"Added: ${receipt['amount']} \n"
+                        f"Note: {receipt['note']} \n"
+                        f"Balance: ${receipt['balance']}",
+            color=discord.Color.dark_teal()
+        )
+
+        for time_num, timely_data in receipt['timely_data'].items():
+            embed.add_field(
+            name=f"{timely_data['time']}",
+            value=(
+                f"Added: ${timely_data['added']} | "
+                f"Spent: ${timely_data['spent']} | "
+                f"Net: ${timely_data['net_change']} \n"
+
+            ),
+            inline=False
             )
+
+            day_logs = []
+            for log in timely_data['logs']:
+                day_logs.append(
+                    f"id {log['ledger_id(PK)']} | "
+                    f"{log['action']} | "
+                    f"${log['amount']} | "
+                    f"{log.get('note', '—')}"
+                )
+            # IN CASIES
+            if day_logs:
+                embed.add_field(name="", 
+                                value="\n".join(day_logs[:8]), 
+                                inline=False
+                                )
         # ^^^END
 
         await interaction.followup.send(embed=embed, ephemeral=True)

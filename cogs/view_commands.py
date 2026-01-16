@@ -48,6 +48,7 @@ class ViewCommandsCog(commands.Cog):
                     f"Added: ${monthly_data['added']} | "
                     f"Spent: ${monthly_data['spent']} | "
                     f"Net: ${monthly_data['net_change']} \n"
+                    f"Entries: {len(monthly_data['logs'])}"
                 ),
                 inline=False
             )
@@ -62,7 +63,7 @@ class ViewCommandsCog(commands.Cog):
                     )
                 # IN CASIES
                 if month_logs:
-                    embed.add_field(name=f"Entries: {len(monthly_data['logs'])}", value="\n".join(month_logs[:8]), inline=False)
+                    embed.add_field(name="", value="\n".join(month_logs[:8]), inline=False)
         
         # MONTH
         elif scope == "month":
@@ -72,7 +73,8 @@ class ViewCommandsCog(commands.Cog):
                 value=(
                     f"Added: ${weekly_data['added']} | "
                     f"Spent: ${weekly_data['spent']} | "
-                    f"Net: ${weekly_data['net_change']}"
+                    f"Net: ${weekly_data['net_change']} \n"
+                    f"Entries: {len(weekly_data['logs'])}"
                 ),
                 inline=False
                 )
@@ -87,10 +89,7 @@ class ViewCommandsCog(commands.Cog):
                     )
                 # IN CASIES
                 if week_logs:
-                    embed.add_field(name=f"Entries: {len(weekly_data['logs'])}", 
-                                    value="\n".join(week_logs[:8]), 
-                                    inline=False
-                                    )
+                    embed.add_field(name="", value="\n".join(week_logs[:8]), inline=False)
         
         # DAY
         elif scope == "day":
@@ -115,10 +114,7 @@ class ViewCommandsCog(commands.Cog):
                     )
                 # IN CASIES
                 if day_logs:
-                    embed.add_field(name=f"Entries: {len(timely_data['logs'])}", 
-                                    value="\n".join(day_logs[:8]), 
-                                    inline=False
-                                    )
+                    embed.add_field(name="", value="\n".join(day_logs[:8]), inline=False)
 
         # ^^^END
 
