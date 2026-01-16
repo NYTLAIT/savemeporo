@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from logics.log_logic import check_account, enter_log
+from logics.log_logic import enter_log
 
 # SETUP AND LINK TO MAIN FILE(bot.py)
 """
@@ -47,7 +47,7 @@ class LogCommandsCog(commands.Cog):
         creates the dynamic stuffs, that brings that UI for the autocomplete, float, and str
         """
         user = str(interaction.user)
-        enter_log(action, amount, note, user)
+        enter_log(action, amount, note, user, data_file='data.json')
 
         await interaction.response.send_message(
             f'test log_command-> action:{action}, amount:{amount}, note:{note}')
@@ -56,15 +56,15 @@ class LogCommandsCog(commands.Cog):
     print('log_commands.py: log_cog is being seen')
 
 # LINK TO MAIN BOT
-"""
-links to the main bot, setup_hook in bot.py looks for setup,
-looks inside and then brings main bot reference like imprinting
-so that the commands can call the main bot
-
-TODO: unsure of how the process really runs from start to finish
-since it **seems** top to bottom but no time to check debugging 
-feature to follow path right now
-"""
 async def setup(bot):
+    """
+    links to the main bot, setup_hook in bot.py looks for setup,
+    looks inside and then brings main bot reference like imprinting
+    so that the commands can call the main bot
+
+    TODO: unsure of how the process really runs from start to finish
+    since it **seems** top to bottom but no time to check debugging 
+    feature to follow path right now
+    """
     await bot.add_cog(LogCommandsCog(bot))
     print('log_commands.py: log commands have loaded and synced to bot.py')

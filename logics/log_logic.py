@@ -2,12 +2,11 @@ from datetime import datetime
 from logics.general_logic import *
 
 # ENTER NEW LOG
-def enter_log(action: str, amount: float, note: str, user):
+def enter_log(action: str, amount: float, note: str, user, data_file='data.json'):
     """
     Check if user exists and create account if not.
     Create new ledger log entry including given info and timestamp,
     identifiable by the given user's user_id marked by user_id
-
 
     :param user: user's discord account found through 
     interactions.user
@@ -22,9 +21,7 @@ def enter_log(action: str, amount: float, note: str, user):
     :type note: str
     :return:
     """
-    user_id, data = check_account(user)
-    timestamp = datetime.now()
-
+    user_id, data, timestamp = check_account(user)
     ledger_module = data.get('ledger_module')
 
     new_ledger_entry = {
@@ -43,16 +40,12 @@ def enter_log(action: str, amount: float, note: str, user):
     write_data(data_file, data)
 # ^^^END
 
-# CHECK DAY'S PREVIOUS LOGS
-
-
-
 #JUST TO SEE IF WORKING
 print(json.dumps(read_data(data_file), indent=4))
 
-ledger_module = data.get('ledger_module')
-print(json.dumps(ledger_module, indent=4))
-print(len(ledger_module) + 1)
+# ledger_module = data.get('ledger_module')
+# print(json.dumps(ledger_module, indent=4))
+# print(len(ledger_module) + 1)
 
 timestamp = datetime.now().date()
 print(type(timestamp.isoformat()))

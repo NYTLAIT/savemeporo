@@ -26,15 +26,20 @@ def check_account(user):
     interactions.user
     :type user: str
     :return user_id(PK): user's id to match objects
-    :return data_file: access to data.json
+    :return data: access to state of data.json of when command 
+    was called
+    :return timestamp: timestamp for when /command was accessed,
+    used for matching log times and entering log data
     """
     data = read_data(data_file)
     user_module = data.get('user_module')
     monthly_statement_module = data.get('monthly_statement_module')
 
+    timestamp = datetime.now()
+
     for account in user_module:
         if user == account['user']:
-            return account.get('user_id(PK)')
+            return account.get('user_id(PK)'), data, timestamp
         
     new_account_entry = {
         "user_id(PK)": len(user_module) + 1, 
@@ -47,19 +52,19 @@ def check_account(user):
         "closing_balance": 0,
             "total_spent": 0,
             "total_saved": 0,
-            "year": datetime.now().year,
-            "month": datetime.now().month
+            "year": timestamp.year,
+            "month": timestamp.month
         }
     
     user_module.append(new_account_entry)
     monthly_statement_module.append(new_first_monthly_statement_entry)
     write_data(data_file, data)
 
-    return new_account_entry['user_id(PK)'], data
+    return new_account_entry['user_id(PK)'], data, timestamp
 # ^^^END
 
 # FILTERING LEDGERS
-def user_and_time_ledger_filter(user_id, ledger_module, timestamp, filter_type):
+def user_and_time_log_filter(user_id, ledger_module, timestamp, filter_type):
     """
     filter each log object in the list ledger_module and depending on
     the filter_type append the log to a list on the prerequisite that
@@ -73,7 +78,7 @@ def user_and_time_ledger_filter(user_id, ledger_module, timestamp, filter_type):
     :return log_list: filtered list of logs that meet filter specifications
     """   
     log_list = []
-
+    
     for log in ledger_module:
         if log['user_id(FK)'] != user_id:
             continue
