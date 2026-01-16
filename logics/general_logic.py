@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 data_file = 'data.json'
 
@@ -12,8 +13,6 @@ def write_data(data_file, data):
         json.dump(data, outfile, indent=4)
 # ^^^END
 
-data = read_data(data_file)
-
 # CHECK USER
 def check_account(user):
     """
@@ -26,8 +25,10 @@ def check_account(user):
     :param user: user's discord account found through 
     interactions.user
     :type user: str
-    :return user_id(PK):
+    :return user_id(PK): user's id to match objects
+    :return data_file: access to data.json
     """
+    data = read_data(data_file)
     user_module = data.get('user_module')
     monthly_statement_module = data.get('monthly_statement_module')
 
@@ -39,22 +40,53 @@ def check_account(user):
         "user_id(PK)": len(user_module) + 1, 
         "user": user
     }
-    user_module.append(new_account_entry)
-    new_first_month_statement_entry = {
-        "month_id(PK)": "",
-        "user_id(FK)": "",
-        "opening_balance": "",
-        "closing_balance": "",
-            "total_spent": "",
-            "total_saved": "",
-            "year": "",
-            "month": ""
+    new_first_monthly_statement_entry = {
+        "month_id(PK)": len(monthly_statement_module) + 1,
+        "user_id(FK)": new_account_entry['user_id(PK)'],
+        "opening_balance": 0,
+        "closing_balance": 0,
+            "total_spent": 0,
+            "total_saved": 0,
+            "year": datetime.now().year,
+            "month": datetime.now().month
         }
-
+    
+    user_module.append(new_account_entry)
+    monthly_statement_module.append(new_first_monthly_statement_entry)
     write_data(data_file, data)
-    return new_account_entry['user_id(PK)']
+
+    return new_account_entry['user_id(PK)'], data
 # ^^^END
 
 # FILTERING LEDGERS
-def user_and_time_ledger_filter(user_id, filter_type):
-    pass
+def user_and_time_ledger_filter(user_id, ledger_module, timestamp, filter_type):
+    """
+    filter each log object in the list ledger_module and depending on
+    the filter_type append the log to a list on the prerequisite that
+    they match the given timestamp's year or year&month or date
+    
+    :param user_id: match each user 
+    :param ledger_module: access to the specific list in data.json
+    :param timestamp: datetime object of when /command was called
+    :param filter_type: Type of date filter needed for logs year or 
+    year&month or date
+    :return log_list: filtered list of logs that meet filter specifications
+    """   
+    log_list = []
+
+    for log in ledger_module:
+        if log['user_id(FK)'] != user_id:
+            continue
+        
+        log_date = datetime.fromisoformat(log['date'])
+        if filter_type == 'year':
+            if log_date.year == timestamp.year:
+                log_list.append(log)
+        elif filter_type == 'month':
+            if log_date.year == timestamp.year and log_date.month == timestamp.month:
+                log_list.append(log)
+        elif filter_type == 'day':
+            if log_date.date() == timestamp.date():
+                log_list.append(log)
+
+    return log_list

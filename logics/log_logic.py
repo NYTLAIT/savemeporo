@@ -22,16 +22,16 @@ def enter_log(action: str, amount: float, note: str, user):
     :type note: str
     :return:
     """
-    user_id = check_account(user)
+    user_id, data = check_account(user)
     timestamp = datetime.now()
 
     ledger_module = data.get('ledger_module')
 
     new_ledger_entry = {
-        "ledger_id(PK)": len(ledger_module) + 1,
+        "ledger_id(PK)": len(ledger_module) + 1, 
         "user_id(FK)": user_id,
-        "date": timestamp.date(),
-        "time": timestamp.time(),
+        "date": timestamp.date().isoformat(),
+        "time": timestamp.time().isoformat(),
         "amount": amount,
         "action": action,
         "method": "null",
@@ -44,14 +44,7 @@ def enter_log(action: str, amount: float, note: str, user):
 # ^^^END
 
 # CHECK DAY'S PREVIOUS LOGS
-def day_log(user_id, timestamp, ledger_module):
-    day_log_data = []
 
-    for ledger in ledger_module:
-        if ledger['user_id(FK)'] == user_id and ledger['date'] == timestamp.date():
-            day_log_data.append(ledger)
-
-    return 
 
 
 #JUST TO SEE IF WORKING
@@ -60,3 +53,10 @@ print(json.dumps(read_data(data_file), indent=4))
 ledger_module = data.get('ledger_module')
 print(json.dumps(ledger_module, indent=4))
 print(len(ledger_module) + 1)
+
+timestamp = datetime.now().date()
+print(type(timestamp.isoformat()))
+print(timestamp.isoformat())
+print(type((datetime.fromisoformat(timestamp.isoformat()))))
+print(datetime.fromisoformat(timestamp.isoformat()).date())
+print(type(timestamp.year))

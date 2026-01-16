@@ -1,0 +1,2 @@
+1. no data should be deleted as id assignment system will break
+2. may run into issues with loading in the data.json file (only if two people write at a command at the exact same time as the data is only read once at the start and never updates until the end of the slash command process)
