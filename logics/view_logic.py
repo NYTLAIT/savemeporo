@@ -21,12 +21,7 @@ def year_log(user):
                 "logs": []
             }
         
-        if log.get['action'] == 'in':
-            monthly_data[log_date_datetime.month]['added'] += log['amount']
-            monthly_data[log_date_datetime.month]['net_change'] += log['amount']
-        elif log.get['action'] == 'in':
-            monthly_data[log_date_datetime.month]['spent'] += log['amount']
-            monthly_data[log_date_datetime.month]['net_change'] -= log['amount']
+        
             
     return monthly_data
 
@@ -40,23 +35,23 @@ def month_log(user):
     weekly_data = {}
 
     for log in month_log_list:
-        log_date_datetime = datetime.fromisoformat(log['date']).date().isocalendar()
+        log_date_datetime = datetime.fromisoformat(log['date']).date()
+        log_date_weeknum = log_date_datetime.isocalendar()
 
-        if log_date_datetime.month not in weekly_data:
-            weekly_data[log_date_datetime.month] = {
-                "week": log_date_datetime.strftime("%B"),
+        if log_date_weeknum[1] not in weekly_data:
+            weekly_data[log_date_weeknum[1]] = {
+                "week_start_date": log_date_datetime,
+                "week_end_date": log_date_datetime,
                 "added": 0,
                 "spent": 0,
                 "net_change": 0,
                 "logs": []
             }
-        
-        if log.get['action'] == 'in':
-            weekly_data[log_date_datetime.month]['added'] += log['amount']
-            weekly_data[log_date_datetime.month]['net_change'] += log['amount']
-        elif log.get['action'] == 'in':
-            weekly_data[log_date_datetime.month]['spent'] += log['amount']
-            weekly_data[log_date_datetime.month]['net_change'] -= log['amount']
+        else:
+            if log_date_datetime < weekly_data[log_date_weeknum[1]]["week_start"]:
+                weekly_data[log_date_weeknum[1]]["week_start_date"] = log_date_datetime
+            if log_date_datetime > weekly_data[log_date_weeknum[1]]["week_start"]:
+                weekly_data[log_date_weeknum[1]]["week_end_date"] = log_date_datetime
             
     return weekly_data
 
@@ -69,4 +64,19 @@ def day_log(user):
 
     timely_data = {}
 
+    for log in day_log_list:
+        log_date_time = datetime.fromisoformat(log['time']).time()
+
+        if log_date_time not in timely_data:
+            timely_data[log_date_time] = {
+                "time": log_date_time.strftime("%H:%M:%S"),
+                "added": 0,
+                "spent": 0,
+                "net_change": 0,
+                "logs": []
+            }
+    
+    def sorted_func()
+
+    return timely_data
     

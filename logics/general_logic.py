@@ -95,3 +95,53 @@ def user_and_time_log_filter(user_id, ledger_module, timestamp, filter_type):
                 log_list.append(log)
 
     return log_list
+
+# SORT FILTERED_LOG_LIST
+def sort_log_data(statement_log_data, numeric=False):
+    """
+    Convert the value of the key (the return function type 
+    pointing to the value the list item will be compared and
+    sorted by which works for year and month only as they are
+    numerics in strings. Else python knows how to compare 
+    .strftime("%H:%M:%S").
+
+    :param numeric: bool of whether statement_log_data is numeric,
+    default false
+    :return sorted_statement_log_data: sorted statement_log_data
+    from earliest to latest
+    :type sorted_statement_log_data: dict
+    """
+    def sort_key(log):
+        """
+        sorts the key of the log by turning defined integer key string 
+        into actual integers
+        
+        :param log: indiv each log in the statement_log_data dictionary
+        key: value pair turned (key, value) tuple
+        :type log: (key, value) tuple
+        """
+        key, value = log
+        if numeric:
+            return int(key)
+        return key
+
+    sorted_log_list = sorted(statement_log_data.items(), key=sort_key)
+
+    return dict(sorted_log_list)
+
+# FILTERED_LOG TOTAL CALC
+def total_balance(timestamp_date, ledger_module):
+    total_balance = 0
+
+    for log in ledger_module:
+        log_datetime = datetime.fromisoformat(log.get("date"))
+        if log_datetime <= timestamp_date:
+            if log.get("action") == "in":
+                total_balance += log.get['amount']
+            elif log.get("action") == "out":
+                total_balance -= log['amount']
+    
+    return total_balance
+
+
+# ALL LEDGER TOTAL BALANCE

@@ -1,4 +1,5 @@
 import discord
+from discord import Embed
 from discord.ext import commands
 
 from logics.log_logic import enter_log
@@ -49,8 +50,7 @@ class LogCommandsCog(commands.Cog):
         user = str(interaction.user)
         enter_log(action, amount, note, user, data_file='data.json')
 
-        await interaction.response.send_message(
-            f'test log_command-> action:{action}, amount:{amount}, note:{note}')
+        await interaction.response.send_message(embed=Embed(title=f'{action}'))
         
     # PRINT IF COG IS BEING SEEN
     print('log_commands.py: log_cog is being seen')
