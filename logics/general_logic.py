@@ -57,4 +57,4 @@ def check_account(user):
 
 # FILTERING LEDGERS
 def user_and_time_ledger_filter(user_id, filter_type):
-    
+    pass
