@@ -39,17 +39,3 @@ def enter_log(action: str, amount: float, note: str, user, data_file='data.json'
 
     write_data(data_file, data)
 # ^^^END
-
-#JUST TO SEE IF WORKING
-print(json.dumps(read_data(data_file), indent=4))
-
-# ledger_module = data.get('ledger_module')
-# print(json.dumps(ledger_module, indent=4))
-# print(len(ledger_module) + 1)
-
-timestamp = datetime.now().date()
-print(type(timestamp.isoformat()))
-print(timestamp.isoformat())
-print(type((datetime.fromisoformat(timestamp.isoformat()))))
-print(datetime.fromisoformat(timestamp.isoformat()).date())
-print(type(timestamp.year))

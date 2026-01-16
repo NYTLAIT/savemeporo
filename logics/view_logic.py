@@ -8,6 +8,8 @@ def year_log(user):
     year_log_list = user_and_time_log_filter(user_id, ledger_module, timestamp, filter_type)
     
     monthly_data = {}
+    total_added = 0
+    total_spent = 0
 
     for log in year_log_list:
         log_date_datetime = datetime.fromisoformat(log['date']).date()
@@ -20,10 +22,25 @@ def year_log(user):
                 "net_change": 0,
                 "logs": []
             }
+        monthly_data[log_date_datetime.month]['logs'].append(log)
+
+    for month in monthly_data:
+        month_totals = log_totals(monthly_data[month]['logs'])
+        monthly_data[month].update(month_totals)
+
+        total_added += month_totals['added']
+        total_spent += month_totals['spent']
+
+    year_statement = {
+        "monthly_data": monthly_data,
+        "total_added": total_added,
+        "total_spent": total_spent,
+        "net_change": total_added - total_spent
+    }
         
-        
-            
-    return monthly_data
+    year_statement['monthly_data'] = sort_log_data(year_statement['monthly_data'], numeric=True)
+    
+    return year_statement
 
 def month_log(user):
     user_id, data, timestamp = check_account(user)
@@ -33,13 +50,15 @@ def month_log(user):
     month_log_list = user_and_time_log_filter(user_id, ledger_module, timestamp, filter_type)
 
     weekly_data = {}
+    total_added = 0
+    total_spent = 0
 
     for log in month_log_list:
         log_date_datetime = datetime.fromisoformat(log['date']).date()
-        log_date_weeknum = log_date_datetime.isocalendar()
+        log_date_weeknum = log_date_datetime.isocalendar()[1]
 
-        if log_date_weeknum[1] not in weekly_data:
-            weekly_data[log_date_weeknum[1]] = {
+        if log_date_weeknum not in weekly_data:
+            weekly_data[log_date_weeknum] = {
                 "week_start_date": log_date_datetime,
                 "week_end_date": log_date_datetime,
                 "added": 0,
@@ -48,12 +67,30 @@ def month_log(user):
                 "logs": []
             }
         else:
-            if log_date_datetime < weekly_data[log_date_weeknum[1]]["week_start"]:
-                weekly_data[log_date_weeknum[1]]["week_start_date"] = log_date_datetime
-            if log_date_datetime > weekly_data[log_date_weeknum[1]]["week_start"]:
-                weekly_data[log_date_weeknum[1]]["week_end_date"] = log_date_datetime
+            if log_date_datetime < weekly_data[log_date_weeknum]['week_start_date']:
+                weekly_data[log_date_weeknum]['week_start_date'] = log_date_datetime
+            if log_date_datetime > weekly_data[log_date_weeknum]['week_end_date']:
+                weekly_data[log_date_weeknum]['week_end_date'] = log_date_datetime
+
+        weekly_data[log_date_weeknum]['logs'].append(log)
+
+    for week in weekly_data:
+        week_totals = log_totals(weekly_data[week]['logs'])
+        weekly_data[week].update(week_totals)
+
+        total_added += week_totals['added']
+        total_spent += week_totals['spent']
+
+    month_statement = {
+        "weekly_data": weekly_data,
+        "total_added": total_added,
+        "total_spent": total_spent,
+        "net_change": total_added - total_spent
+    }
+
+    month_statement['weekly_data'] = sort_log_data(month_statement['weekly_data'], numeric=True)
             
-    return weekly_data
+    return month_statement
 
 def day_log(user):
     user_id, data, timestamp = check_account(user)
@@ -63,6 +100,8 @@ def day_log(user):
     day_log_list = user_and_time_log_filter(user_id, ledger_module, timestamp, filter_type)
 
     timely_data = {}
+    total_added = 0
+    total_spent = 0
 
     for log in day_log_list:
         log_date_time = datetime.fromisoformat(log['time']).time()
@@ -75,8 +114,24 @@ def day_log(user):
                 "net_change": 0,
                 "logs": []
             }
-    
-    def sorted_func()
+        
+        timely_data[log_date_time]['logs'].append(log)
 
-    return timely_data
+    for time in timely_data:
+        time_totals = log_totals(timely_data[time]['logs'])
+        timely_data[time].update(time_totals)
+
+        total_added += time_totals['added']
+        total_spent += time_totals['spent']
+
+    day_statement = {
+        "timely_data": timely_data,
+        "total_added": total_added,
+        "total_spent": total_spent,
+        "net_change": total_added - total_spent
+    }
+
+    day_statement['timely_data'] = sort_log_data(day_statement['timely_data'])
+
+    return day_statement
     

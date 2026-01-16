@@ -95,6 +95,7 @@ def user_and_time_log_filter(user_id, ledger_module, timestamp, filter_type):
                 log_list.append(log)
 
     return log_list
+# ^^^END
 
 # SORT FILTERED_LOG_LIST
 def sort_log_data(statement_log_data, numeric=False):
@@ -128,20 +129,41 @@ def sort_log_data(statement_log_data, numeric=False):
     sorted_log_list = sorted(statement_log_data.items(), key=sort_key)
 
     return dict(sorted_log_list)
+# ^^^END
 
-# FILTERED_LOG TOTAL CALC
+# ALL LEDGER TOTAL BALANCE
 def total_balance(timestamp_date, ledger_module):
     total_balance = 0
 
     for log in ledger_module:
-        log_datetime = datetime.fromisoformat(log.get("date"))
+        log_datetime = datetime.fromisoformat(log.get('date'))
         if log_datetime <= timestamp_date:
-            if log.get("action") == "in":
-                total_balance += log.get['amount']
-            elif log.get("action") == "out":
+            if log.get('action') == 'in':
+                total_balance += log['amount']
+            elif log.get('action') == 'out':
                 total_balance -= log['amount']
     
     return total_balance
+# ^^^END
 
+# FILTERED_LOG TOTAL CALC
+def log_totals(log_list):
+    totals = {
+        "added": 0,
+        "spent": 0,
+        "net_change": 0
+    }
 
-# ALL LEDGER TOTAL BALANCE
+    for log in log_list:
+        action = log['action']
+        amount = log['amount']
+    
+        if action == 'in':
+            totals['added'] += amount
+            totals['net_change'] += amount
+        elif action == 'out':
+            totals['spent'] += amount
+            totals['net_change'] -= amount
+
+    return totals
+# ^^^END
