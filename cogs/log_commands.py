@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+from logics.log_logic import check_account, enter_log
+
 # SETUP AND LINK TO MAIN FILE(bot.py)
 """
 create snippet/clone/uh of main bot from commands.Cog 
@@ -44,6 +46,9 @@ class LogCommandsCog(commands.Cog):
         """
         creates the dynamic stuffs, that brings that UI for the autocomplete, float, and str
         """
+        user = str(interaction.user)
+        enter_log(action, amount, note, user)
+
         await interaction.response.send_message(
             f'test log_command-> action:{action}, amount:{amount}, note:{note}')
         
